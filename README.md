@@ -1,4 +1,4 @@
-# BlackJack Solver
+# BlackJack Strategy
 
 ## Overview
 
