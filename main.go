@@ -9,8 +9,6 @@ import (
 	"time"
 )
 
-type Suit int
-
 const (
 	Heart Suit = iota + 1
 	Club
@@ -20,43 +18,6 @@ const (
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-}
-
-func (s Suit) String() string {
-	return [...]string{"H", "C", "D", "S"}[s-1]
-}
-
-func (s Suit) EnumIndex() int {
-	return int(s)
-}
-
-type Rank int
-
-func (r Rank) String() string {
-	switch int(r) {
-	case 1:
-		return "A"
-	case 10:
-		return "T"
-	case 11:
-		return "J"
-	case 12:
-		return "Q"
-	case 13:
-		return "K"
-	default:
-		return fmt.Sprintf("%d", int(r))
-	}
-}
-
-func (r Rank) Value() []int {
-	if r == 1 {
-		return []int{1, 11}
-	}
-	if r > 10 {
-		return []int{10}
-	}
-	return []int{int(r)}
 }
 
 type Card struct {
