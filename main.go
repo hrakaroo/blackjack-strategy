@@ -131,7 +131,7 @@ func (h *Hand) Take(c Card) {
 	h.Cards = append(h.Cards, c)
 }
 
-func (h *Hand) Total() (total int, soft bool, bust bool) {
+func (h *Hand) Total() (total int, soft bool) {
 	// Calculate our totals
 
 	totals := []Total{{0, false}}
@@ -157,59 +157,96 @@ func (h *Hand) Total() (total int, soft bool, bust bool) {
 	// Find the highest score not over 21
 	for i := len(totals) - 1; i >= 0; i-- {
 		if totals[i].Value <= 21 {
-			return totals[i].Value, totals[i].Soft, false
+			return totals[i].Value, totals[i].Soft
 		}
 	}
-	return totals[0].Value, totals[0].Soft, true
+	return totals[0].Value, totals[0].Soft
 }
 
 func main() {
 	shoe := NewShoe(3)
 	shoe.Shuffle()
 
-	players := []*Hand{{}, {}}
+	// Create our dealer
+	dealer := NewHitSoft17()
 
-	// Deal two cards to each
-	for i := 0; i < 2; i++ {
+	// Create the players
+	players := []Player{NewHitSoft17(), NewHitSoft17(), NewHitSoft17()}
+	scores := make([]int, len(players))
+	count := 0
+
+	for i := 0; i < 1_000_000; i++ {
+		if shoe.IsDone() {
+			// fmt.Println("New shoe")
+			shoe = NewShoe(3)
+			shoe.Shuffle()
+		}
+
+		for i := 0; i < len(players); i++ {
+			players[i].NewHand()
+		}
+		dealer.NewHand()
+
+		// Deal two cards to each
+		for i := 0; i < 2; i++ {
+			for p := 0; p < len(players); p++ {
+				players[p].Take(shoe.Pull())
+			}
+			// Dealer
+			dealer.Take(shoe.Pull())
+		}
+
+		// Each Player goes
 		for p := 0; p < len(players); p++ {
-			players[p].Take(shoe.Pull())
+			player := players[p]
+			for {
+				action := player.Action(dealer.TopCard())
+				if action == Hit {
+					player.Take(shoe.Pull())
+				} else {
+					break
+				}
+			}
 		}
-	}
-
-	// Each Player goes
-	for p := 0; p < len(players)-1; p++ {
-		player := players[p]
+		// Dealer goes
 		for {
-			// Keep hitting until we get to hard 17 or better
-			total, soft, bust := player.Total()
-			if bust {
-				fmt.Printf("Player %d bust!\n", p)
+			action := dealer.Action(dealer.TopCard())
+			if action == Hit {
+				dealer.Take(shoe.Pull())
+			} else {
 				break
 			}
-			if total > 17 || total == 17 && !soft {
-				break
+		}
+		dealerTotal := dealer.Total()
+
+		// fmt.Printf("Dealer = %v = %d\n", dealer, dealerTotal)
+
+		// Determine winners
+		for i := 0; i < len(players); i++ {
+			total := players[i].Total()
+			// fmt.Printf("Player(%d) = %v = %d\n", i, players[i], total)
+			if total > 21 {
+				// fmt.Printf("Player BUSTS\n")
+				// A bust is always a loss
+				scores[i]--
+			} else if dealerTotal > 21 {
+				// fmt.Printf("Dealer BUSTS\n")
+				// Dealer bust is a win
+				scores[i]++
+			} else if total > dealerTotal {
+				// fmt.Printf("Player WINS %d > %d \n", total, dealerTotal)
+				scores[i]++
+			} else if total < dealerTotal {
+				// fmt.Printf("Dealer WINS %d < %d \n", total, dealerTotal)
+				scores[i]--
+			} else {
+				// fmt.Printf("Push %d = %d\n", total, dealerTotal)
 			}
-			player.Take(shoe.Pull())
 		}
+		count++
 	}
 
-	// Now the dealer
-	dealer := players[len(players)-1]
-	for {
-		// Keep hitting until we get to hard 17 or better
-		total, soft, bust := dealer.Total()
-		if bust {
-			fmt.Printf("Dealer bust: %d!\n", total)
-			break
-		}
-		if total > 17 || total == 17 && !soft {
-			break
-		}
-		dealer.Take(shoe.Pull())
-	}
-
-	for i := 0; i < len(players); i++ {
-		total, _, _ := players[i].Total()
-		fmt.Printf("%v = %d\n", *players[i], total)
+	for i := 0; i < len(scores); i++ {
+		fmt.Printf("Player %d/%d = %d%%\n", scores[i], count, (scores[i]+count)*100/count)
 	}
 }

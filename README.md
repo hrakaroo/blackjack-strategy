@@ -24,3 +24,18 @@ Somewhere along the way I'll probably want to see about
 incorporating a drawing library so I can generate some of
 the solver charts and see how they match up to the 
 others I've seen posted.
+
+## Results
+
+### Hit on Soft 17
+
+With the basic Hit on Soft 17 (aka dealer strategy), running the simulation
+1M times with three players seems to result in a 91% average
+```
+Player -82391/1000000 = 91%
+Player -81911/1000000 = 91%
+Player -81311/1000000 = 91%
+```
+
+Meaning that you are going to leave with 91% of what you walked in with.  Not
+great, but TBH it's a lot better than I was expecting.  
