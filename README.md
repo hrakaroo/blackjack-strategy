@@ -27,15 +27,12 @@ others I've seen posted.
 
 ## Results
 
-### Hit on Soft 17
-
-With the basic Hit on Soft 17 (aka dealer strategy), running the simulation
-1M times with three players seems to result in a 91% average
 ```
-Player -82391/1000000 = 91%
-Player -81911/1000000 = 91%
-Player -81311/1000000 = 91%
+Player(0 - Hit Soft 17) 2000000 : -303055 = -15%
+Player(1 - Hit Soft 17) 2000000 : -306513 = -15%
+Player(2 - Strategy 1) 2000000 : -247861 = -12%
+Player(3 - Strategy 1) 2000000 : -249345 = -12%
 ```
 
-Meaning that you are going to leave with 91% of what you walked in with.  Not
-great, but TBH it's a lot better than I was expecting.  
+So following the basic dealer strategy of hitting on soft 17 is a -15% losing proposition.
+Strategy 1, which has no splits or double downs, is a -12% losing proposition.
