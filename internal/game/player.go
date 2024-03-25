@@ -1,4 +1,4 @@
-package main
+package game
 
 type Action int
 
@@ -16,6 +16,12 @@ const (
 	Bust
 	Lose
 )
+
+type Brain interface {
+	Name() string
+	Bet() int
+	Action(dealerCard Card, hand *Hand) Action
+}
 
 type Player struct {
 	brain Brain

@@ -2,21 +2,25 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/hrakaroo/blackjack-strategy/internal/brains"
+	"github.com/hrakaroo/blackjack-strategy/internal/game"
 )
 
 func main() {
 	// Create our dealer
-	dealer := NewDealer()
+	dealer := game.NewDealer(brains.NewHitSoft17())
 
 	// Create the players
-	players := []*Player{NewPlayer(NewHitSoft17()), NewPlayer(NewSimple1()), NewPlayer(NewSimple2())}
+	players := []*game.Player{game.NewPlayer(brains.NewHitSoft17()),
+		game.NewPlayer(brains.NewSimple1()), game.NewPlayer(brains.NewSimple2())}
 
-	var shoe *Shoe
+	var shoe *game.Shoe
 	for i := 0; i < 1_000_000; i++ {
 		var newShoe bool
 		if shoe == nil || shoe.IsDone() {
 			// fmt.Println("New shoe")
-			shoe = NewShoe(3)
+			shoe = game.NewShoe(3)
 			shoe.Shuffle()
 			newShoe = true
 		}
@@ -49,7 +53,7 @@ func main() {
 			player := players[p]
 			for {
 				action := player.Action(dealer.TopCard())
-				if action == Hit {
+				if action == game.Hit {
 					player.Take(shoe.Pull(), true)
 				} else {
 					break
@@ -60,7 +64,7 @@ func main() {
 		// Dealer goes
 		for {
 			action := dealer.Action(dealer.TopCard())
-			if action == Hit {
+			if action == game.Hit {
 				dealer.Take(shoe.Pull(), true)
 			} else {
 				break
@@ -78,6 +82,6 @@ func main() {
 		wagers := player.Wagers()
 		wins := player.Wins()
 		ratio := float32(wins) * 100.0 / float32(wagers)
-		fmt.Printf("Player(%d - %s) %d : %d = %0.2f%%\n", i, player.Strategy(), wagers, wins, ratio)
+		fmt.Printf("Player(%d) - %-20s - %d : %d = %0.2f%%\n", i, player.Strategy(), wagers, wins, ratio)
 	}
 }
