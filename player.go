@@ -6,6 +6,7 @@ const (
 	Stand Action = iota + 1
 	Hit
 	Split
+	Double
 )
 
 type Result int
@@ -19,8 +20,9 @@ const (
 type Player struct {
 	brain Brain
 
-	hands     []*Hand
-	handIndex int
+	hands      []*Hand
+	handIndex  int
+	doubleDown bool
 
 	// Keep a running total of how much we have wagered
 	wager int
@@ -32,7 +34,6 @@ type Player struct {
 func (p *Player) NewHand(newShoe bool) {
 	bet := p.brain.Bet()
 
-	p.wager += bet
 	p.bankroll -= bet
 	p.hands = []*Hand{NewHand(bet)}
 }
@@ -43,9 +44,21 @@ func (p *Player) Strategy() string {
 
 func (p *Player) Action(dealer Card) Action {
 
-	// todo - we need to do more
+	if p.doubleDown {
+		// todo - We already took the card so advance the handIndex
 
-	return p.brain.Action(dealer, p.hands[0])
+		p.doubleDown = false
+		return Stand
+	}
+
+	action := p.brain.Action(dealer, p.hands[0])
+	if action == Double {
+		// Double the bet in the hand and only take one more card
+		p.hands[0].bet *= 2
+		p.doubleDown = true
+		return Hit
+	}
+	return action
 }
 
 func (p *Player) Wager() int {
@@ -69,6 +82,7 @@ func (p *Player) DealerHasBlackJack() {
 
 func (p *Player) DealerHas(dealerTotal int) {
 	for i := 0; i < len(p.hands); i++ {
+		p.wager += p.hands[i].bet
 		playerTotal, _ := p.hands[i].Total()
 		if playerTotal > 21 {
 			// The player busted, we lose what ever money we bet

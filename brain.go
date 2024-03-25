@@ -29,18 +29,18 @@ func NewHitSoft17() Brain {
 	return &HitSoft17{}
 }
 
-type Simple struct {
+type Simple1 struct {
 }
 
-func (b *Simple) Name() string {
-	return "Simple"
+func (b *Simple1) Name() string {
+	return "Simple 1"
 }
 
-func (b *Simple) Bet() int {
+func (b *Simple1) Bet() int {
 	return 2
 }
 
-func (b *Simple) Action(dealerCard Card, hand *Hand) Action {
+func (b *Simple1) Action(dealerCard Card, hand *Hand) Action {
 	total, soft := hand.Total()
 	if soft {
 		if total >= 19 {
@@ -55,6 +55,7 @@ func (b *Simple) Action(dealerCard Card, hand *Hand) Action {
 			}
 		}
 	} else {
+		// Hard
 		if total >= 17 {
 			// Always stand on 18 or better
 			return Stand
@@ -78,6 +79,108 @@ func (b *Simple) Action(dealerCard Card, hand *Hand) Action {
 	return Hit
 }
 
-func NewSimple() Brain {
-	return &Simple{}
+func NewSimple1() Brain {
+	return &Simple1{}
+}
+
+type Simple2 struct {
+}
+
+func (b *Simple2) Name() string {
+	return "Simple 2"
+}
+
+func (b *Simple2) Bet() int {
+	return 2
+}
+
+func (b *Simple2) Action(dealerCard Card, hand *Hand) Action {
+	total, soft := hand.Total()
+
+	if total > 21 {
+		return Stand
+	}
+
+	cardCount := len(hand.Cards)
+
+	if soft {
+		switch total {
+		case 21:
+			fallthrough
+		case 20:
+			return Stand
+		case 19:
+			if cardCount == 2 && dealerCard.Rank == 6 {
+				return Double
+			}
+			return Stand
+		case 18:
+			if cardCount == 2 && dealerCard.Rank <= 6 {
+				return Double
+			}
+			if dealerCard.Rank <= 8 {
+				return Stand
+			}
+		case 17:
+			if cardCount == 2 && dealerCard.Rank >= 3 && dealerCard.Rank <= 6 {
+				return Double
+			}
+		case 16:
+			fallthrough
+		case 15:
+			if cardCount == 2 && dealerCard.Rank >= 4 && dealerCard.Rank <= 6 {
+				return Double
+			}
+		case 14:
+			fallthrough
+		case 13:
+			if cardCount == 2 && dealerCard.Rank >= 5 && dealerCard.Rank <= 6 {
+				return Double
+			}
+		}
+	} else {
+		switch total {
+		case 21:
+			fallthrough
+		case 20:
+			fallthrough
+		case 19:
+			fallthrough
+		case 18:
+			fallthrough
+		case 17:
+			return Stand
+		case 16:
+			fallthrough
+		case 15:
+			fallthrough
+		case 14:
+			fallthrough
+		case 13:
+			if dealerCard.Rank <= 6 {
+				return Stand
+			}
+		case 12:
+			if dealerCard.Rank >= 4 && dealerCard.Rank <= 6 {
+				return Stand
+			}
+		case 11:
+			if cardCount == 2 {
+				return Double
+			}
+		case 10:
+			if cardCount == 2 && dealerCard.Rank <= 9 {
+				return Double
+			}
+		case 9:
+			if cardCount == 2 && dealerCard.Rank >= 3 && dealerCard.Rank <= 6 {
+				return Double
+			}
+		}
+	}
+	return Hit
+}
+
+func NewSimple2() Brain {
+	return &Simple2{}
 }

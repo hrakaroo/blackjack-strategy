@@ -28,10 +28,9 @@ others I've seen posted.
 ## Results
 
 ```
-Player(0 - Hit Soft 17) 2000000 : -305704 = -15%
-Player(1 - Hit Soft 17) 2000000 : -305736 = -15%
-Player(2 - Simple Strategy) 2000000 : -224126 = -11%
-Player(3 - Simple Strategy) 2000000 : -225764 = -11%
+Player(0 - Hit Soft 17) 1904804 : -304330 = -15.98%
+Player(1 - Simple 1) 1904804 : -223857 = -11.75%
+Player(2 - Simple 2) 2108896 : 924 = 0.04%
 ```
 
 So following the basic dealer strategy of hitting on soft 17 is a -15% losing proposition.
@@ -42,11 +41,18 @@ Strategy 1, which has no splits or double downs, is a -11% losing proposition.
 This is basically the dealers strategy where you hit on anything below a 17 or if the
 17 is a soft 17 (ie, one of the cards is an Ace)
 
-#### Simple Strategy
+#### Simple 1
 
 This is the "perfect" strategy from 
    https://www.blackjackapprenticeship.com/blackjack-strategy-charts/
 
 but without the ability to double down or split. 
+
+#### Simple 2
+
+Basically the same as Simple1, but allows double down.
+
+I'm thinking I have a bug somewhere.  No way should this result in a positive result.
+
 
 

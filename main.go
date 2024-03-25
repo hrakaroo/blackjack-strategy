@@ -9,8 +9,7 @@ func main() {
 	dealer := NewDealer()
 
 	// Create the players
-	players := []*Player{NewPlayer(NewHitSoft17()), NewPlayer(NewHitSoft17()),
-		NewPlayer(NewSimple()), NewPlayer(NewSimple())}
+	players := []*Player{NewPlayer(NewHitSoft17()), NewPlayer(NewSimple1()), NewPlayer(NewSimple2())}
 
 	var shoe *Shoe
 	for i := 0; i < 1_000_000; i++ {
@@ -78,6 +77,7 @@ func main() {
 		player := players[i]
 		wager := player.Wager()
 		bankroll := player.Bankroll()
-		fmt.Printf("Player(%d - %s) %d : %d = %d%%\n", i, player.Strategy(), wager, bankroll, (bankroll)*100/wager)
+		ratio := float32(bankroll) * 100.0 / float32(wager)
+		fmt.Printf("Player(%d - %s) %d : %d = %0.2f%%\n", i, player.Strategy(), wager, bankroll, ratio)
 	}
 }
