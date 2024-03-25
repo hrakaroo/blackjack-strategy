@@ -9,7 +9,8 @@ func main() {
 	dealer := NewDealer()
 
 	// Create the players
-	players := []Player{NewHitSoft17(), NewHitSoft17(), NewStrategy1(), NewStrategy1()}
+	players := []*Player{NewPlayer(NewHitSoft17()), NewPlayer(NewHitSoft17()),
+		NewPlayer(NewSimple()), NewPlayer(NewSimple())}
 
 	var shoe *Shoe
 	for i := 0; i < 1_000_000; i++ {
