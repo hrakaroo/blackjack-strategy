@@ -75,9 +75,9 @@ func main() {
 
 	for i := 0; i < len(players); i++ {
 		player := players[i]
-		wager := player.Wager()
-		bankroll := player.Bankroll()
-		ratio := float32(bankroll) * 100.0 / float32(wager)
-		fmt.Printf("Player(%d - %s) %d : %d = %0.2f%%\n", i, player.Strategy(), wager, bankroll, ratio)
+		wagers := player.Wagers()
+		wins := player.Wins()
+		ratio := float32(wins) * 100.0 / float32(wagers)
+		fmt.Printf("Player(%d - %s) %d : %d = %0.2f%%\n", i, player.Strategy(), wagers, wins, ratio)
 	}
 }

@@ -25,16 +25,15 @@ type Player struct {
 	doubleDown bool
 
 	// Keep a running total of how much we have wagered
-	wager int
+	wagers int
 
-	// Wins and losses
-	bankroll int
+	// Our total for wins
+	wins int
 }
 
 func (p *Player) NewHand(newShoe bool) {
 	bet := p.brain.Bet()
 
-	p.bankroll -= bet
 	p.hands = []*Hand{NewHand(bet)}
 }
 
@@ -53,6 +52,11 @@ func (p *Player) Action(dealer Card) Action {
 
 	action := p.brain.Action(dealer, p.hands[0])
 	if action == Double {
+		// Belt and suspenders, make sure we can double and this is not a bug
+		if len(p.hands[0].Cards) != 2 {
+			panic("Illegal double")
+		}
+
 		// Double the bet in the hand and only take one more card
 		p.hands[0].bet *= 2
 		p.doubleDown = true
@@ -61,12 +65,12 @@ func (p *Player) Action(dealer Card) Action {
 	return action
 }
 
-func (p *Player) Wager() int {
-	return p.wager
+func (p *Player) Wagers() int {
+	return p.wagers
 }
 
-func (p *Player) Bankroll() int {
-	return p.bankroll
+func (p *Player) Wins() int {
+	return p.wins
 }
 
 func (p *Player) Take(card Card, faceUp bool) {
@@ -74,24 +78,45 @@ func (p *Player) Take(card Card, faceUp bool) {
 }
 
 func (p *Player) DealerHasBlackJack() {
-	if p.hands[0].IsBlackJack() {
-		// Push
-		p.bankroll += p.hands[0].bet
+	// Technically the loop is unnecessary as we can't split if the dealer has blackjack but
+	//  for completeness ...
+	for i := 0; i < len(p.hands); i++ {
+		p.wagers += p.hands[i].bet
+		if p.hands[0].IsBlackJack() {
+			// Push
+			p.wins += p.hands[i].bet
+		}
 	}
 }
 
 func (p *Player) DealerHas(dealerTotal int) {
 	for i := 0; i < len(p.hands); i++ {
-		p.wager += p.hands[i].bet
+		p.wagers += p.hands[i].bet
 		playerTotal, _ := p.hands[i].Total()
+
 		if playerTotal > 21 {
-			// The player busted, we lose what ever money we bet
-		} else if p.hands[i].IsBlackJack() {
-			// The player had blackjack dealer pays 2/3
-			p.bankroll += p.hands[i].bet * 5 / 2
-		} else if dealerTotal > 21 || playerTotal > dealerTotal {
+			// The player busted, they lose what ever money they bet
+			continue
+		}
+
+		if p.hands[i].IsBlackJack() {
+			// The player had blackjack, dealer pays 2/3
+			//  So a bet of $2 would pay $3 for a total reclaim of $5
+			//  $2 * 5 = $10 / 2 = $5
+			p.wins += p.hands[i].bet * 5 / 2
+			continue
+		}
+
+		if dealerTotal > 21 || playerTotal > dealerTotal {
 			// Dealer bust, win 2x what we bet
-			p.bankroll += p.hands[i].bet * 2
+			p.wins += p.hands[i].bet * 2
+			continue
+		}
+
+		if dealerTotal == playerTotal {
+			// Push, just get our bet back
+			p.wins += p.hands[i].bet
+			continue
 		}
 	}
 }

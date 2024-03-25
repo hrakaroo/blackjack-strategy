@@ -6,6 +6,7 @@ type Brain interface {
 	Action(dealerCard Card, hand *Hand) Action
 }
 
+// Hit Soft 17 keeps hitting until we are at a hard 17 or better
 type HitSoft17 struct {
 }
 
@@ -101,7 +102,7 @@ func (b *Simple2) Action(dealerCard Card, hand *Hand) Action {
 		return Stand
 	}
 
-	cardCount := len(hand.Cards)
+	canDouble := len(hand.Cards) == 2
 
 	if soft {
 		switch total {
@@ -110,31 +111,31 @@ func (b *Simple2) Action(dealerCard Card, hand *Hand) Action {
 		case 20:
 			return Stand
 		case 19:
-			if cardCount == 2 && dealerCard.Rank == 6 {
+			if canDouble && dealerCard.Rank == 6 {
 				return Double
 			}
 			return Stand
 		case 18:
-			if cardCount == 2 && dealerCard.Rank <= 6 {
+			if canDouble && dealerCard.Rank <= 6 {
 				return Double
 			}
 			if dealerCard.Rank <= 8 {
 				return Stand
 			}
 		case 17:
-			if cardCount == 2 && dealerCard.Rank >= 3 && dealerCard.Rank <= 6 {
+			if canDouble && dealerCard.Rank >= 3 && dealerCard.Rank <= 6 {
 				return Double
 			}
 		case 16:
 			fallthrough
 		case 15:
-			if cardCount == 2 && dealerCard.Rank >= 4 && dealerCard.Rank <= 6 {
+			if canDouble && dealerCard.Rank >= 4 && dealerCard.Rank <= 6 {
 				return Double
 			}
 		case 14:
 			fallthrough
 		case 13:
-			if cardCount == 2 && dealerCard.Rank >= 5 && dealerCard.Rank <= 6 {
+			if canDouble && dealerCard.Rank >= 5 && dealerCard.Rank <= 6 {
 				return Double
 			}
 		}
@@ -165,15 +166,15 @@ func (b *Simple2) Action(dealerCard Card, hand *Hand) Action {
 				return Stand
 			}
 		case 11:
-			if cardCount == 2 {
+			if canDouble {
 				return Double
 			}
 		case 10:
-			if cardCount == 2 && dealerCard.Rank <= 9 {
+			if canDouble && dealerCard.Rank <= 9 {
 				return Double
 			}
 		case 9:
-			if cardCount == 2 && dealerCard.Rank >= 3 && dealerCard.Rank <= 6 {
+			if canDouble && dealerCard.Rank >= 3 && dealerCard.Rank <= 6 {
 				return Double
 			}
 		}

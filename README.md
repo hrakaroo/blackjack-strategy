@@ -27,14 +27,15 @@ others I've seen posted.
 
 ## Results
 
-```
-Player(0 - Hit Soft 17) 1904804 : -304330 = -15.98%
-Player(1 - Simple 1) 1904804 : -223857 = -11.75%
-Player(2 - Simple 2) 2108896 : 924 = 0.04%
-```
+The results are calculated by keeping a running total of how much money we have bet
+vs what we have won.  So we have a running `wagers` total that gets incremented _on every bet_.
+Then we have a `wins` which gets incremented at the end of every hand.  
 
-So following the basic dealer strategy of hitting on soft 17 is a -15% losing proposition.
-Strategy 1, which has no splits or double downs, is a -11% losing proposition.
+```
+Player(0 - Hit Soft 17) 2000000 : 1878352 = 93.92%
+Player(1 - Simple 1) 2000000 : 1931515 = 96.58%
+Player(2 - Simple 2) 2206512 : 2175779 = 98.61%
+```
 
 ### Hit Soft 17
 
@@ -51,8 +52,6 @@ but without the ability to double down or split.
 #### Simple 2
 
 Basically the same as Simple1, but allows double down.
-
-I'm thinking I have a bug somewhere.  No way should this result in a positive result.
 
 
 
