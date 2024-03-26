@@ -29,9 +29,11 @@ Values less than 100% indicates the strategy loses money and values over 100% in
 the strategy wins money.  
 
 ```
-Player(0) - Hit Soft 17          - 2000000 : 1879993 = 94.00%
-Player(1) - No Split/No Double   - 2000000 : 1937684 = 96.88%
-Player(2) - No Split             - 2204542 : 2174714 = 98.65%
+Player(0) - Hit Soft 17          - 2000000 : 1885667 = 94.28%
+Player(1) - No Split/No Double   - 2000000 : 1934044 = 96.70%
+Player(2) - No Split             - 2204250 : 2178957 = 98.85%
+Player(3) - Perfect              - 2270828 : 2265266 = 99.76%
+Player(4) - Perfect              - 2269418 : 2262497 = 99.70%
 ```
 
 ### Hit Soft 17
@@ -52,5 +54,21 @@ but without the ability to double down or split.
 
 Basically the same as the previous one, but allows doubling down on bets.
 
+#### Perfect
 
+This is basicall the full implementation of the perfect strategy as defined above.
+Takes into account all splits and doubles.  With a perfect strategy, over a long enough
+period of time, you can achive an average 99.7%.  So still losing, but only by a small
+fraction, but you need to stick to the plan.
 
+#### Card Counting
+
+Okay, now we get into some fun stuff.  Full card counting is not trivial.  It requires a fair 
+bit of concentration, but given we are at 99.7% with the perfect strategy, I'm curious how much
+counting you would need to do to push that number over the edge.  For example, what if you just
+counted the last n hands?  How many hands would you need to count until you were even or slightly
+positive EV.  And when you do full card counting, what is your percentage like then?
+
+2-6 = +1
+7-9 = 0
+10-A = -1

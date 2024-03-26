@@ -12,8 +12,13 @@ func main() {
 	dealer := game.NewDealer(brains.NewHitSoft17())
 
 	// Create the players
-	players := []*game.Player{game.NewPlayer(brains.NewHitSoft17()),
-		game.NewPlayer(brains.NewSimple1()), game.NewPlayer(brains.NewSimple2())}
+	players := []*game.Player{
+		game.NewPlayer(brains.NewHitSoft17()),
+		game.NewPlayer(brains.NewSimple1()),
+		game.NewPlayer(brains.NewSimple2()),
+		game.NewPlayer(brains.NewSimple3()),
+		game.NewPlayer(brains.NewSimple3()),
+	}
 
 	var shoe *game.Shoe
 	for i := 0; i < 1_000_000; i++ {

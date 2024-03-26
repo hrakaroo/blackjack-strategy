@@ -100,7 +100,7 @@ func NewShoe(decks int) *Shoe {
 		}
 	}
 
-	// The end card is set at around the last 15%
-	end := int(float32(len(cards)) * .85)
+	// The end card is set at around the last 20%
+	end := int(float32(len(cards)) * .80)
 	return &Shoe{cards: cards, end: end}
 }

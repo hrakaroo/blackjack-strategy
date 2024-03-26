@@ -41,6 +41,8 @@ func (p *Player) NewHand(newShoe bool) {
 	bet := p.brain.Bet()
 
 	p.hands = []*Hand{NewHand(bet)}
+	p.handIndex = 0
+	p.doubleDown = false
 }
 
 func (p *Player) Strategy() string {
@@ -49,26 +51,66 @@ func (p *Player) Strategy() string {
 
 func (p *Player) Action(dealer Card) Action {
 
-	if p.doubleDown {
-		// todo - We already took the card so advance the handIndex
+	for p.handIndex < len(p.hands) {
+		// Dereference the current hand we are working on
+		hand := p.hands[p.handIndex]
 
-		p.doubleDown = false
-		return Stand
-	}
-
-	action := p.brain.Action(dealer, p.hands[0])
-	if action == Double {
-		// Belt and suspenders, make sure we can double and this is not a bug
-		if len(p.hands[0].Cards) != 2 {
-			panic("Illegal double")
+		if len(hand.Cards) == 1 {
+			// This is due to a split
+			return Hit
 		}
 
-		// Double the bet in the hand and only take one more card
-		p.hands[0].bet *= 2
-		p.doubleDown = true
-		return Hit
+		// Determine what the course of action is for this hand
+		action := p.brain.Action(dealer, hand)
+
+		// A hit is a hit, no other interpretations needed
+		if action == Hit {
+			return Hit
+		}
+
+		if action == Double {
+			// Belt and suspenders, make sure we can double and this is not a bug
+			if len(p.hands[p.handIndex].Cards) != 2 {
+				panic("Illegal double")
+			}
+
+			// Double the bet in the hand and only take one more card
+			p.hands[p.handIndex].bet *= 2
+			p.doubleDown = true
+			return Hit
+		}
+
+		if action == Split {
+			card1 := hand.Cards[0]
+			card2 := hand.Cards[1]
+
+			// Keep card 1 in the current hand
+			hand.Cards = []Card{card1}
+
+			// Put card 2 in the new hand
+			newHand := NewHand(p.hands[p.handIndex].bet)
+			newHand.Cards = []Card{card2}
+			p.hands = append(p.hands, newHand)
+
+			return Hit
+		}
+
+		if action == Stand {
+			p.handIndex++
+		}
 	}
-	return action
+
+	// We are done
+	return Stand
+}
+
+func (p *Player) Take(card Card, faceUp bool) {
+	p.hands[p.handIndex].Take(card)
+
+	if p.doubleDown {
+		p.doubleDown = false
+		p.handIndex++
+	}
 }
 
 func (p *Player) Wagers() int {
@@ -77,10 +119,6 @@ func (p *Player) Wagers() int {
 
 func (p *Player) Wins() int {
 	return p.wins
-}
-
-func (p *Player) Take(card Card, faceUp bool) {
-	p.hands[p.handIndex].Take(card)
 }
 
 func (p *Player) DealerHasBlackJack() {
