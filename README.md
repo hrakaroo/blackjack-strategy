@@ -43,7 +43,7 @@ Player(4) - Perfect              - 2269418 : 2262497 = 99.70%
 This is basically the dealers strategy where the player hits on anything below a 17, or on 17 if 
 it's a soft 17 (ie, one of the cards is an Ace).
 
-#### No Split/No Double
+### No Split/No Double
 
 This is the "perfect" strategy from 
    https://www.blackjackapprenticeship.com/blackjack-strategy-charts/
@@ -52,7 +52,7 @@ but without the ability to double down or split. Mostly because this was the eas
 to simulate first, but also because I'm curious how much each of these strategies
 improves your odds.
 
-#### No Split
+### No Split
 
 Basically the same as the previous one, but allows doubling down on bets.
 
@@ -63,7 +63,7 @@ This takes into account all splits and doubles.  With a perfect strategy, over a
 period of time, you can achive an average 99.7%.  So still losing, but only by a small
 fraction, but you need to stick to the plan.
 
-#### Card Counting
+### Card Counting
 
 Okay, now we get into some fun stuff.  Full card counting is not trivial.  It requires a fair 
 bit of concentration, but given we are at 99.7% with the perfect strategy, I'm curious how much
@@ -73,8 +73,8 @@ positive EV.  And when you do full card counting, what is your percentage like t
 
 For card counting we are going to use the basic strategy:
 
-2-6 = +1
-7-9 = 0
-10-A = -1
+2-6 = +1<br>
+7-9 = 0<br>
+10-A = -1<br>
 
 When we are in the positive by more than `k` we can increase our bets.
