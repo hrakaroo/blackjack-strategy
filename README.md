@@ -2,12 +2,12 @@
 
 ## Overview
 
-I'm not a big gambler in general, and when I do go to Las Vegas I usually play 1/2 no-limit Poker.  I find the
+I'm not a big gambler in general, but when I do go to Las Vegas I usually play 1/2 no-limit Poker.  I find the
 dynamics of the game play interesting, and with a fairly conservative strategy I'm usually in the positive
-after most trips.  (But not enough that I'm ready to quit my day job.)
+after most trips, if even only just barely.
 
 However, despite sitting at a table with eight other people, it's not a hugely social game.  If I'm with friends 
-I'll usually play BlackJack with them which, I'll be honest, I'm not terribly good at.  And while there exist 
+I'll usually play BlackJack which, if I'm honest, I'm not terribly good at.  And while there exist 
 many BlackJack _trainer_ apps, most of them require a fair bit of rote memorization of charts which is not 
 terribly fun.  So instead I thought it might be interesting to wire up some simulations and see what actually 
 impacts your odds and maybe along the way I'll start to internalize some of these rules.
