@@ -1,5 +1,7 @@
 package game
 
+import "fmt"
+
 type Action int
 
 const (
@@ -26,9 +28,7 @@ type Brain interface {
 type Player struct {
 	brain Brain
 
-	hands      []*Hand
-	handIndex  int
-	doubleDown bool
+	hands []*Hand
 
 	// Keep a running total of how much we have wagered
 	wagers int
@@ -41,75 +41,70 @@ func (p *Player) NewHand(newShoe bool) {
 	bet := p.brain.Bet()
 
 	p.hands = []*Hand{NewHand(bet)}
-	p.handIndex = 0
-	p.doubleDown = false
 }
 
 func (p *Player) Strategy() string {
 	return p.brain.Name()
 }
 
-func (p *Player) Action(dealer Card) Action {
-
-	for p.handIndex < len(p.hands) {
-		// Dereference the current hand we are working on
-		hand := p.hands[p.handIndex]
-
-		if len(hand.Cards) == 1 {
-			// This is due to a split
-			return Hit
-		}
-
-		// Determine what the course of action is for this hand
-		action := p.brain.Action(dealer, hand)
-
-		// A hit is a hit, no other interpretations needed
-		if action == Hit {
-			return Hit
-		}
-
-		if action == Double {
-			// Belt and suspenders, make sure we can double and this is not a bug
-			if len(p.hands[p.handIndex].Cards) != 2 {
-				panic("Illegal double")
-			}
-
-			// Double the bet in the hand and only take one more card
-			p.hands[p.handIndex].bet *= 2
-			p.doubleDown = true
-			return Hit
-		}
-
-		if action == Split {
-			card1 := hand.Cards[0]
-			card2 := hand.Cards[1]
-
-			// Keep card 1 in the current hand
-			hand.Cards = []Card{card1}
-
-			// Put card 2 in the new hand
-			newHand := NewHand(p.hands[p.handIndex].bet)
-			newHand.Cards = []Card{card2}
-			p.hands = append(p.hands, newHand)
-
-			return Hit
-		}
-
-		if action == Stand {
-			p.handIndex++
-		}
-	}
-
-	// We are done
-	return Stand
+func (p *Player) Deal(take func(bool) Card) {
+	// Take a card
+	p.hands[0].Take(take(false))
 }
 
-func (p *Player) Take(card Card, faceUp bool) {
-	p.hands[p.handIndex].Take(card)
+func (p *Player) Play(dealer Card, take func(bool) Card) {
+	// Go through each hand
+	for i := 0; i < len(p.hands); i++ {
+		// Dereference the current hand we are working on
+		hand := p.hands[i]
 
-	if p.doubleDown {
-		p.doubleDown = false
-		p.handIndex++
+		// Keep taking cards until we are done
+	PROMPT:
+		for {
+			if len(hand.Cards) == 1 {
+				// This is due to a split
+				hand.Take(take(false))
+				continue PROMPT
+			}
+
+			// Determine what the course of action is for this hand
+			action := p.brain.Action(dealer, hand)
+			switch action {
+			case Stand:
+				break PROMPT
+			case Double:
+				// Belt and suspenders, make sure we can double and this is not a bug
+				if len(hand.Cards) != 2 {
+					panic("Illegal double")
+				}
+				// Double our bet and only take one more hand
+				hand.bet *= 2
+				hand.Take(take(false))
+				break PROMPT
+			case Hit:
+				hand.Take(take(false))
+			case Split:
+				// Belt and suspenders, make sure we can split and this is not a bug
+				if len(hand.Cards) != 2 {
+					panic("Illegal split")
+				}
+				card1 := hand.Cards[0]
+				card2 := hand.Cards[1]
+
+				// Keep card 1 in the current hand
+				hand.Cards = []Card{card1}
+
+				// Put card 2 in the new hand
+				newHand := NewHand(p.hands[i].bet)
+				newHand.Cards = []Card{card2}
+
+				// Put the new hand at the end.  Technically this isn't how it works at a casino but
+				//  as this hand would then get played last and not next but it shouldn't change the odds
+				p.hands = append(p.hands, newHand)
+			default:
+				panic(fmt.Sprintf("Forgot to handle %v", action))
+			}
+		}
 	}
 }
 

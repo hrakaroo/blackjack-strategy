@@ -31,17 +31,25 @@ the strategy wins money.  It should come as no suprise that without card countin
 we are under 100%.
 
 ```
-Player(0) - Hit Soft 17          - 2000000 : 1885667 = 94.28%
-Player(1) - No Split/No Double   - 2000000 : 1934044 = 96.70%
-Player(2) - No Split             - 2204250 : 2178957 = 98.85%
-Player(3) - Perfect              - 2270828 : 2265266 = 99.76%
-Player(4) - Perfect              - 2269418 : 2262497 = 99.70%
+Player(0) - Hit Soft 17          - 2000000 : 1878457 = 93.92%
+Player(1) - Never Bust           - 2168178 : 2069800 = 95.46%
+Player(2) - No Split/No Double   - 2000000 : 1934630 = 96.73%
+Player(3) - No Split             - 2205580 : 2176473 = 98.68%
+Player(4) - Perfect              - 2269934 : 2263038 = 99.70%
 ```
 
 ### Hit Soft 17
 
 This is basically the dealers strategy where the player hits on anything below a 17, or on 17 if 
 it's a soft 17 (ie, one of the cards is an Ace).
+
+### Never Bust
+
+Simple strategy where the player is betting the dealer will bust so never hits on anything
+above a hard 12. 
+
+This initially had a 93% success rate until it was updated to allow doubling on a
+10 or 11.  That one change increased the success rate to 95.5%.
 
 ### No Split/No Double
 
@@ -54,7 +62,8 @@ improves your odds.
 
 ### No Split
 
-Basically the same as the previous one, but allows doubling down on bets.
+Basically the same as the previous one, but allows doubling down on bets.  Again, 
+adding doubling adds on two percentage points.
 
 #### Perfect
 
