@@ -19,7 +19,7 @@ take to execute, so long as I can come back to my code in a week/month/year and 
 
 First, I just need to simulate a card, deck, shoe and
 the basic play action.  After that is complete want to 
-figure out some percentages over 10,000+ simulations and
+figure out some percentages over 1,000,000 simulations and
 then start to play with different strategies.
 
 ## Results so far

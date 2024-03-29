@@ -2,18 +2,18 @@ package brains
 
 import "github.com/hrakaroo/blackjack-strategy/internal/game"
 
-type Simple3 struct {
+type Perfect struct {
 }
 
-func (b *Simple3) Name() string {
+func (b *Perfect) Name() string {
 	return "Perfect"
 }
 
-func (b *Simple3) Bet() int {
+func (b *Perfect) Bet() int {
 	return 2
 }
 
-func (b *Simple3) Action(dealerCard game.Card, hand *game.Hand) game.Action {
+func (b *Perfect) Action(dealerCard game.Card, hand *game.Hand) game.Action {
 	total, soft := hand.Total()
 
 	if total > 21 {
@@ -129,6 +129,6 @@ func (b *Simple3) Action(dealerCard game.Card, hand *game.Hand) game.Action {
 	return game.Hit
 }
 
-func NewSimple3() game.Brain {
-	return &Simple3{}
+func NewPerfect() game.Brain {
+	return &Perfect{}
 }

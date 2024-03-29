@@ -16,8 +16,8 @@ func main() {
 		game.NewPlayer(brains.NewHitSoft17()),
 		game.NewPlayer(brains.NewSimple1()),
 		game.NewPlayer(brains.NewSimple2()),
-		game.NewPlayer(brains.NewSimple3()),
-		game.NewPlayer(brains.NewSimple3()),
+		game.NewPlayer(brains.NewPerfect()),
+		game.NewPlayer(brains.NewPerfect()),
 	}
 
 	var shoe *game.Shoe
