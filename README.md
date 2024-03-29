@@ -2,7 +2,7 @@
 
 ## Overview
 
-I don't gamble a lot in general and when I do go to Las Vegas I normally will just play 
+I don't gamble a lot in general and when I do go to Las Vegas I will usually just play 
 1/2 no-limit Poker.  (I find the dynamics of the game play interesting, and with a 
 fairly conservative strategy I'm usually in the positive after most trips, if even only 
 just barely.)  However, despite sitting at a table with eight other people, it's not a 
@@ -13,8 +13,9 @@ fun.  So instead I thought it might be interesting to wire up some simulations a
 what actually impacts your odds and maybe along the way I'll start to internalize some 
 of these rules.
 
-This is a side project, so I'm leaning heavily to clarity over speed.  I don't really care how long the simulations
-take to execute, so long as I can come back to my code in a week/month/year and easily understand what I wrote.
+This is a side project, so I'm leaning heavily to clarity over speed.  I don't really care 
+how long the simulations take to execute, so long as I can come back to my code in a 
+week/month/year and easily understand what I wrote.
 
 ## Approach
 
