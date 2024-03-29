@@ -75,7 +75,7 @@ func (s *Shoe) String() string {
 }
 
 // Pull a card out of the Shoe
-func (s *Shoe) Pull(faceDown bool) Card {
+func (s *Shoe) Pull() Card {
 	if s.index > len(s.cards) {
 		panic("Went past deck")
 	}

@@ -11,6 +11,9 @@ func main() {
 	// Create our dealer
 	dealer := game.NewDealer(brains.NewHitSoft17())
 
+	// Create eyes for card countiung
+	eyes := game.NewEyes()
+
 	// Create the players
 	players := []*game.Player{
 		game.NewPlayer(brains.NewHitSoft17()),
@@ -30,6 +33,10 @@ func main() {
 			newShoe = true
 		}
 
+		pullFn := shoe.Pull
+		// Watch the shoe.Pull
+		pullFn = eyes.Watch(pullFn)
+
 		// Inform the players (and dealer) of a new hand
 		for i := 0; i < len(players); i++ {
 			players[i].NewHand(newShoe)
@@ -39,10 +46,10 @@ func main() {
 		// Deal two cards to each
 		for i := 0; i < 2; i++ {
 			for p := 0; p < len(players); p++ {
-				players[p].Deal(shoe.Pull)
+				players[p].Deal(pullFn)
 			}
 			// Dealer
-			dealer.Deal(shoe.Pull)
+			dealer.Deal(pullFn)
 		}
 
 		// Check if the dealer has blackjack. No need to model insurance
@@ -55,11 +62,11 @@ func main() {
 
 		// Each Player goes
 		for p := 0; p < len(players); p++ {
-			players[p].Play(dealer.TopCard(), shoe.Pull)
+			players[p].Play(dealer.TopCard(), pullFn)
 		}
 
 		// Dealer goes
-		dealer.Play(dealer.TopCard(), shoe.Pull)
+		dealer.Play(dealer.TopCard(), pullFn)
 		dealerTotal := dealer.Total()
 
 		// Update each player on the results of the dealer

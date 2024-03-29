@@ -47,12 +47,12 @@ func (p *Player) Strategy() string {
 	return p.brain.Name()
 }
 
-func (p *Player) Deal(take func(bool) Card) {
+func (p *Player) Deal(take func() Card) {
 	// Take a card
-	p.hands[0].Take(take(false))
+	p.hands[0].Take(take())
 }
 
-func (p *Player) Play(dealer Card, take func(bool) Card) {
+func (p *Player) Play(dealer Card, take func() Card) {
 	// Go through each hand
 	for i := 0; i < len(p.hands); i++ {
 		// Dereference the current hand we are working on
@@ -63,7 +63,7 @@ func (p *Player) Play(dealer Card, take func(bool) Card) {
 		for {
 			if len(hand.Cards) == 1 {
 				// This is due to a split
-				hand.Take(take(false))
+				hand.Take(take())
 				continue PROMPT
 			}
 
@@ -79,10 +79,10 @@ func (p *Player) Play(dealer Card, take func(bool) Card) {
 				}
 				// Double our bet and only take one more hand
 				hand.bet *= 2
-				hand.Take(take(false))
+				hand.Take(take())
 				break PROMPT
 			case Hit:
-				hand.Take(take(false))
+				hand.Take(take())
 			case Split:
 				// Belt and suspenders, make sure we can split and this is not a bug
 				if len(hand.Cards) != 2 {
