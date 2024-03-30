@@ -2,6 +2,9 @@ package brains
 
 import "github.com/hrakaroo/blackjack-strategy/internal/game"
 
+// Never bust is banking on the dealer busting and so tries to get the highest hand
+//
+//	possible without busting
 type NeverBust struct {
 }
 

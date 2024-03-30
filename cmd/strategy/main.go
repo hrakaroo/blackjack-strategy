@@ -7,6 +7,8 @@ import (
 	"github.com/hrakaroo/blackjack-strategy/internal/game"
 )
 
+const DecksInShoe = 3
+
 func main() {
 	// Create our dealer
 	dealer := game.NewDealer(brains.NewHitSoft17())
@@ -21,6 +23,7 @@ func main() {
 		game.NewPlayer(brains.NewSimple1()),
 		game.NewPlayer(brains.NewSimple2()),
 		game.NewPlayer(brains.NewPerfect()),
+		game.NewPlayer(brains.NewFullCounting(eyes)),
 	}
 
 	var shoe *game.Shoe
@@ -28,9 +31,10 @@ func main() {
 		var newShoe bool
 		if shoe == nil || shoe.IsDone() {
 			// fmt.Println("New shoe")
-			shoe = game.NewShoe(3)
+			shoe = game.NewShoe(DecksInShoe)
 			shoe.Shuffle()
 			newShoe = true
+			eyes.NewShoe(DecksInShoe)
 		}
 
 		pullFn := shoe.Pull

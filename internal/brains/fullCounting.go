@@ -1,23 +1,53 @@
 package brains
 
-import "github.com/hrakaroo/blackjack-strategy/internal/game"
+import (
+	"fmt"
 
-// Perfect follows the strategy at
-//
-//	https://www.blackjackapprenticeship.com/blackjack-strategy-charts/
-//	exactly.
-type Perfect struct {
+	"github.com/hrakaroo/blackjack-strategy/internal/game"
+)
+
+// FullCounting follows the perfect strategy and does perfect card counting.
+type FullCounting struct {
+	runningCount int
+	dealCount    int
+	decksInShoe  int
 }
 
-func (b *Perfect) Name() string {
-	return "Perfect"
+func (b *FullCounting) Name() string {
+	return "Full Counting"
 }
 
-func (b *Perfect) Bet() int {
-	return 2
+func (b *FullCounting) Bet() int {
+	bet := 2
+
+	// Compute real count
+	deckRemaining := ((b.decksInShoe*52 - b.dealCount) / 52) + 1
+
+	realCount := b.runningCount / deckRemaining
+
+	if realCount > 15 {
+		fmt.Println("Big bet")
+		return 10 * bet
+	}
+	return bet
 }
 
-func (b *Perfect) Action(dealerCard game.Card, hand *game.Hand) game.Action {
+func (b *FullCounting) Take(card game.Card) {
+	b.dealCount++
+	if card.Rank >= 2 && card.Rank <= 6 {
+		b.runningCount++
+	} else if card.Rank == 1 || card.Rank >= 10 {
+		b.runningCount--
+	}
+}
+
+func (b *FullCounting) NewShoe(decksInShoe int) {
+	b.runningCount = 0
+	b.dealCount = 0
+	b.decksInShoe = decksInShoe
+}
+
+func (b *FullCounting) Action(dealerCard game.Card, hand *game.Hand) game.Action {
 	total, soft := hand.Total()
 
 	if total > 21 {
@@ -133,6 +163,11 @@ func (b *Perfect) Action(dealerCard game.Card, hand *game.Hand) game.Action {
 	return game.Hit
 }
 
-func NewPerfect() game.Brain {
-	return &Perfect{}
+func NewFullCounting(eyes *game.Eyes) game.Brain {
+	brain := &FullCounting{}
+	// Register call backs
+	eyes.OnTake(brain.Take)
+	eyes.OnNewShoe(brain.NewShoe)
+
+	return brain
 }

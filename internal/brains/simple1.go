@@ -2,6 +2,9 @@ package brains
 
 import "github.com/hrakaroo/blackjack-strategy/internal/game"
 
+// Simple 1 follows the strategoy at
+//  https://www.blackjackapprenticeship.com/blackjack-strategy-charts/
+//  but doesn't split or double
 type Simple1 struct {
 }
 

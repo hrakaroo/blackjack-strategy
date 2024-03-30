@@ -64,7 +64,6 @@ func (p *Player) Play(dealer Card, take func() Card) {
 			if len(hand.Cards) == 1 {
 				// This is due to a split
 				hand.Take(take())
-				continue PROMPT
 			}
 
 			// Determine what the course of action is for this hand
